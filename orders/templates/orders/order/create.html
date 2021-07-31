@@ -1,0 +1,49 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% load mathfilters %}
+{% block title %}
+  PAYER <!--Checkout ,Procéder au règlement-->
+{% endblock %}
+
+{% block content %}
+  </br>
+  </br>
+  </br>
+<link href = "{% static 'css/base.css'%}" rel = "stylesheet">
+<h1>Payer </h1>
+<div class="classFormulaire" class="order-info">
+    <h3> votre commande</h3> <!--Votre commande-->
+    <ul>
+        {% for item in cart %}
+      <li>
+        {{ item.quantity }}x {{ item.product.name }}
+        <span>€{{ item.total_price }}</span>
+      </li>
+        {% endfor %}
+    </ul>
+    <p>Total: €{{ cart.get_total_price }}</p>
+</div>
+
+<form class="classFormulaire" action="." method="post" class="order-form">
+    {{ form.as_p}}
+    <p><input type="submit" value="Passer la commande" class="stripe-button"></p> <!--ici la solution de payment utilisé :STRIPE-->
+    {% csrf_token %}
+
+    <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ key }}"
+            data-description="Payer par carte de crédit"
+            data-amount= "{{ cart.get_total_price|mul:100 }}"
+            data-locale="auto"></script>
+</form>
+
+    <style type="text/css">
+     input[type=date], input[type=datetime-local], input[type=email], input[type=number], input[type=password], input[type=search-md],
+      input[type=tel], input[type=text], input[type=time], input[type=url], textarea.materialize-textarea{
+       height: 2em !important;}
+   </style>
+<style type="text/css">
+    .stripe-button-el {
+     display: none;
+</style>
+{% endblock %}
+
